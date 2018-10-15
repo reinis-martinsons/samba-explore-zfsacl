@@ -1,4 +1,4 @@
-[/source3/smbd/vfs.c]
+//[/source3/smbd/vfs.c]
 
 NTSTATUS smb_vfs_call_fset_nt_acl(struct vfs_handle_struct *handle,
 				  struct files_struct *fsp,
@@ -8,8 +8,8 @@ NTSTATUS smb_vfs_call_fset_nt_acl(struct vfs_handle_struct *handle,
 	VFS_FIND(fset_nt_acl);
 	return handle->fns->fset_nt_acl_fn(handle, fsp, security_info_sent, 
 					   psd);
-_____________________________________________________________________________
-[/source3/modules/vfs_zfsacl.c]
+//_____________________________________________________________________________
+//[/source3/modules/vfs_zfsacl.c]
 
 static NTSTATUS zfsacl_fset_nt_acl(vfs_handle_struct *handle,
 			 files_struct *fsp,
@@ -17,15 +17,15 @@ static NTSTATUS zfsacl_fset_nt_acl(vfs_handle_struct *handle,
 			 const struct security_descriptor *psd)
 {
 	return zfs_set_nt_acl(handle, fsp, security_info_sent, psd);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static NTSTATUS zfs_set_nt_acl(vfs_handle_struct *handle, files_struct *fsp,
 			   uint32_t security_info_sent,
 			   const struct security_descriptor *psd)
 {
         return smb_set_nt_acl_nfs4(handle, fsp, NULL, security_info_sent, psd,
 				   zfs_process_smbacl);
-_____________________________________________________________________________
-[/source3/modules/nfs4_acls.c]
+//_____________________________________________________________________________
+//[/source3/modules/nfs4_acls.c]
 
 NTSTATUS smb_set_nt_acl_nfs4(vfs_handle_struct *handle, files_struct *fsp,
 	const struct smbacl4_vfs_params *pparams,
@@ -119,7 +119,7 @@ NTSTATUS smb_set_nt_acl_nfs4(vfs_handle_struct *handle, files_struct *fsp,
 
 	theacl = smbacl4_win2nfs4(frame, fsp, psd->dacl, pparams,
 				  sbuf.st_ex_uid, sbuf.st_ex_gid);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static struct SMB4ACL_T *smbacl4_win2nfs4(
 	TALLOC_CTX *mem_ctx,
 	const files_struct *fsp,
@@ -136,7 +136,7 @@ static struct SMB4ACL_T *smbacl4_win2nfs4(
 	DEBUG(10, ("smbacl4_win2nfs4 invoked\n"));
 
 	theacl = smb_create_smb4acl(mem_ctx);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 struct SMB4ACL_T *smb_create_smb4acl(TALLOC_CTX *mem_ctx)
 {
 	struct SMB4ACL_T *theacl;
@@ -152,7 +152,7 @@ struct SMB4ACL_T *smb_create_smb4acl(TALLOC_CTX *mem_ctx)
 	/* theacl->first, last = NULL not needed */
 	return theacl;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	if (theacl==NULL)
 		return NULL;
 
@@ -168,7 +168,7 @@ _____________________________________________________________________________
 				  sid_string_dbg(&((dacl->aces+i)->trustee))));
 			continue;
 		}
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static bool smbacl4_fill_ace4(
 	const struct smb_filename *filename,
 	const struct smbacl4_vfs_params *params,
@@ -187,7 +187,7 @@ static bool smbacl4_fill_ace4(
 
 	ace_v4->aceFlags = map_windows_ace_flags_to_nfs4_ace_flags(
 		ace_nt->flags);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static uint32_t map_windows_ace_flags_to_nfs4_ace_flags(uint32_t win_ace_flags)
 {
 	uint32_t nfs4_ace_flags = 0;
@@ -209,7 +209,7 @@ static uint32_t map_windows_ace_flags_to_nfs4_ace_flags(uint32_t win_ace_flags)
 
 	return nfs4_ace_flags;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 
 	/* remove inheritance flags on files */
 	if (VALID_STAT(filename->st) &&
@@ -291,13 +291,13 @@ _____________________________________________________________________________
 
 	return true; /* OK */
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 
 		if (pparams->acedup!=e_dontcare) {
 			if (smbacl4_MergeIgnoreReject(pparams->acedup, theacl,
 				&ace_v4, &addNewACE, i))
 				return NULL;
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static int smbacl4_MergeIgnoreReject(
 	enum smbacl4_acedup_enum acedup,
 	struct SMB4ACL_T *theacl, /* may modify it */
@@ -308,7 +308,7 @@ static int smbacl4_MergeIgnoreReject(
 {
 	int	result = 0;
 	SMB_ACE4PROP_T *ace4found = smbacl4_find_equal_special(theacl, ace);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static SMB_ACE4PROP_T *smbacl4_find_equal_special(
 	struct SMB4ACL_T *acl,
 	SMB_ACE4PROP_T *aceNew)
@@ -348,7 +348,7 @@ static SMB_ACE4PROP_T *smbacl4_find_equal_special(
 
 	return NULL;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	if (ace4found)
 	{
 		switch(acedup)
@@ -372,12 +372,12 @@ _____________________________________________________________________________
 	}
 	return result;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 		}
 
 		if (addNewACE)
 			smb_add_ace4(theacl, &ace_v4);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 struct SMB4ACE_T *smb_add_ace4(struct SMB4ACL_T *acl, SMB_ACE4PROP_T *prop)
 {
 	struct SMB4ACE_T *ace;
@@ -403,12 +403,12 @@ struct SMB4ACE_T *smb_add_ace4(struct SMB4ACL_T *acl, SMB_ACE4PROP_T *prop)
 
 	return ace;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	}
 
 	if (pparams->mode==e_simple) {
 		smbacl4_substitute_simple(theacl, ownerUID, ownerGID);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static int smbacl4_substitute_simple(
 	struct SMB4ACL_T *acl,
 	uid_t ownerUID,
@@ -449,12 +449,12 @@ static int smbacl4_substitute_simple(
 	}
 	return true; /* OK */
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	}
 
 	if (pparams->mode==e_special) {
 		smbacl4_substitute_special(theacl, ownerUID, ownerGID);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 static int smbacl4_substitute_special(
 	struct SMB4ACL_T *acl,
 	uid_t ownerUID,
@@ -489,19 +489,19 @@ static int smbacl4_substitute_special(
 	}
 	return true; /* OK */
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	}
 
 	return theacl;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	if (!theacl) {
 		TALLOC_FREE(frame);
 		return map_nt_error_from_unix(errno);
 	}
 
 	smbacl4_set_controlflags(theacl, psd->type);
-_____________________________________________________________________________
+//_____________________________________________________________________________
 bool smbacl4_set_controlflags(struct SMB4ACL_T *acl, uint16_t controlflags)
 {
 	if (acl == NULL) {
@@ -511,22 +511,22 @@ bool smbacl4_set_controlflags(struct SMB4ACL_T *acl, uint16_t controlflags)
 	acl->controlflags = controlflags;
 	return true;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 	smbacl4_dump_nfs4acl(10, theacl);
 
 	if (set_acl_as_root) {
 		become_root();
 	}
 	result = set_nfs4_native(handle, fsp, theacl);
-_____________________________________________________________________________
-[/source3/smbd/vfs.c]
+//_____________________________________________________________________________
+//[/source3/smbd/vfs.c]
 
 static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
 			       struct SMB4ACL_T *smbacl)
 {
 	int naces = smb_get_naces(smbacl), i;
-_____________________________________________________________________________
-[/source3/modules/nfs4_acls.c]
+//_____________________________________________________________________________
+//[/source3/modules/nfs4_acls.c]
 
 uint32_t smb_get_naces(struct SMB4ACL_T *acl)
 {
@@ -536,8 +536,8 @@ uint32_t smb_get_naces(struct SMB4ACL_T *acl)
 
 	return acl->naces;
 }
-_____________________________________________________________________________
-[/source3/smbd/vfs.c]
+//_____________________________________________________________________________
+//[/source3/smbd/vfs.c]
 
 	ace_t *acebuf;
 	struct SMB4ACE_T *smbace;
@@ -556,8 +556,8 @@ _____________________________________________________________________________
 			smbace!=NULL;
 			smbace = smb_next_ace4(smbace), i++) {
 		SMB_ACE4PROP_T *aceprop = smb_get_ace4(smbace);
-_____________________________________________________________________________
-[/source3/modules/nfs4_acls.c]
+//_____________________________________________________________________________
+//[/source3/modules/nfs4_acls.c]
 
 SMB_ACE4PROP_T *smb_get_ace4(struct SMB4ACE_T *ace)
 {
@@ -567,8 +567,8 @@ SMB_ACE4PROP_T *smb_get_ace4(struct SMB4ACE_T *ace)
 
 	return &ace->prop;
 }
-_____________________________________________________________________________
-[/source3/smbd/vfs.c]
+//_____________________________________________________________________________
+//[/source3/smbd/vfs.c]
 
 
 		acebuf[i].a_type        = aceprop->aceType;
@@ -622,8 +622,8 @@ _____________________________________________________________________________
 
 	return True;
 }
-_____________________________________________________________________________
-[/source3/modules/nfs4_acls.c]
+//_____________________________________________________________________________
+//[/source3/modules/nfs4_acls.c]
 
 	saved_errno = errno;
 	if (set_acl_as_root) {
@@ -642,13 +642,13 @@ _____________________________________________________________________________
 	DEBUG(10, ("smb_set_nt_acl_nfs4 succeeded\n"));
 	return NT_STATUS_OK;
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 }
-_____________________________________________________________________________
+//_____________________________________________________________________________
 }
-_____________________________________________________________________________
-[/source3/smbd/vfs.c]
+//_____________________________________________________________________________
+//[/source3/smbd/vfs.c]
 
 }
 
-_____________________________________________________________________________
+//_____________________________________________________________________________
